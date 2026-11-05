@@ -1,7 +1,7 @@
 {
-  "name": "cloudformation-template",
+  "name": "cfn-nested-aws-ssm-parameter",
   "version": "0.0.0",
-  "description": "CloudFormation template repository with semantic versioning and automated release management.",
+  "description": "Reusable nested CloudFormation templates for deploying secure S3 buckets (versioning, public access blocking, optional bucket policy enforcement), with semantic versioning and automated releases.",
   "main": "index.js",
   "scripts": {
     "release": "semantic-release"
@@ -26,13 +26,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/subhamay-bhattacharyya-cfn/cloudformation-template.git"
+    "url": "git+https://github.com/subhamay-bhattacharyya-cfn/cfn-nested-aws-ssm-parameter.git"
   },
   "author": "Subhamay Bhattacharyya",
   "license": "MIT",
   "keywords": [],
   "bugs": {
-    "url": "https://github.com/subhamay-bhattacharyya-cfn/cloudformation-template/issues"
+    "url": "https://github.com/subhamay-bhattacharyya-cfn/cfn-nested-aws-ssm-parameter/issues"
   },
-  "homepage": "https://github.com/subhamay-bhattacharyya-cfn/cloudformation-template#readme"
+  "homepage": "https://github.com/subhamay-bhattacharyya-cfn/cfn-nested-aws-ssm-parameter#readme"
 }

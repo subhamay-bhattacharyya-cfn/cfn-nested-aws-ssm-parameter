@@ -1,137 +1,152 @@
 AWSTemplateFormatVersion: '2010-09-09'
 
-Description: 'Root CloudFormation template that invokes a nested S3 bucket stack'
+Description: 'Creates an SSM Parameter Store entry that holds the S3 bucket base name for a project and environment'
 
 Metadata:
   AWS::CloudFormation::Interface:
     ParameterGroups:
       - Label:
-          default: "Nested Stack Configuration"
-        Parameters:
-          - NestedStacksS3BucketName
-      - Label:
-          default: "Common Bucket Configuration"
+          default: "Common Configuration"
         Parameters:
           - ProjectName
           - Environment
       - Label:
           default: "Bucket Configuration"
         Parameters:
-          - BucketBaseName
-      - Label:
-          default: "Encryption Configuration"
-        Parameters:
-          - KmsKey
-          - EnableBucketKey
+          - SSMParamName
+          - ParamType
+          - SSMParamValue
+          - SSMParamDescription
       - Label:
           default: "Advanced Configuration"
         Parameters:
           - CiSuffix
+          - Tier
+          - Policies
     ParameterLabels:
-      NestedStacksS3BucketName:
-        default: "S3 Bucket Name"
       ProjectName:
         default: "Project Name"
-      BucketBaseName:
-        default: "Bucket Base Name"
       Environment:
         default: "Environment"
+      SSMParamName:
+        default: "SSM Parameter Name"
+      ParamType:
+        default: "SSM Parameter Type"
+      SSMParamValue:
+        default: "SSM Parameter Value"
+      SSMParamDescription:
+        default: "SSM Parameter Description"
       CiSuffix:
         default: "CI Suffix"
-      KmsKey:
-        default: "KMS Key (ARN / Alias)"
-      EnableBucketKey:
-        default: "Enable S3 Bucket Key"
+      Tier:
+        default: "SSM Parameter Tier"
+      Policies:
+        default: "SSM Parameter Policies"
 
 Parameters:
-  NestedStacksS3BucketName:
-    Type: String
-    Default: "subhamay-cfn-templates-bucket-270453428528-us-east-1"
-    Description: "S3 bucket name where the nested CloudFormation template is stored"
-    MinLength: 3
-    MaxLength: 63
-    AllowedPattern: "^[a-z0-9][a-z0-9.-]*[a-z0-9]$"
-    ConstraintDescription: "S3 bucket name must be 3-63 characters, start and end with lowercase letter or number, and can contain hyphens and dots"
-
   ProjectName:
     Type: String
-    Default: "ztc-etl"
-    Description: "Project name to use as a bucket prefix"
+    Default: "cfn-nested"
+    Description: "Project name used as the top-level SSM parameter path segment"
     MinLength: 1
     MaxLength: 20
     AllowedPattern: "^[a-z0-9-]+$"
     ConstraintDescription: "Project name must be lowercase letters, numbers, and hyphens only"
 
-  BucketBaseName:
-    Type: String
-    Default: "csv-raw-data"
-    MinLength: 1
-    MaxLength: 20
-    AllowedPattern: "^[a-z0-9.-]+$"
-    ConstraintDescription: "Bucket base name must be 1-20 characters and can only contain lowercase letters, numbers, hyphens, and dots"
-    Description: Base name for the S3 bucket (account ID, environment, and region will be appended)
-
-  KmsKey:
-    Type: String
-    Default: ""
-    AllowedPattern: "^(alias/[a-zA-Z0-9_-]+|arn:aws:kms:[a-z0-9-]+:[0-9]+:key/[a-zA-Z0-9-]+|[a-zA-Z0-9_-]+)?$"
-    ConstraintDescription: "KMS Key can be a key name (e.g., my-key, auto-converted to alias/my-key), a KMS key alias (e.g., alias/my-key), or a full KMS key ARN (e.g., arn:aws:kms:region:account:key/key-id), or leave empty for no KMS encryption"
-    Description: "Optional KMS Key for S3 bucket encryption. Accepts: key name (my-key), alias (alias/my-key), or ARN (arn:aws:kms:region:account:key/key-id). Plain key names are auto-converted to aliases."
-
-  EnableBucketKey:
-    Type: String
-    Default: "false"
-    AllowedValues:
-      - "true"
-      - "false"
-    Description: "Enable S3 Bucket Key for KMS encryption cost optimization (only applicable when KmsKey is provided)"
-
   Environment:
     Type: String
     Default: devl
-    Description: "Deployment environment for the S3 bucket"
+    Description: "Deployment environment; used as the second SSM parameter path segment"
+    AllowedPattern: "^[a-z0-9-]+$"
+    ConstraintDescription: "Environment must be lowercase letters, numbers, and hyphens only"
+
+  SSMParamName:
+    Type: String
+    Default: "test_name"
+    MinLength: 1
+    MaxLength: 20
+    AllowedPattern: "^[a-z0-9_]+$"
+    ConstraintDescription: "SSM Parameter name must be 1-20 characters and can only contain lowercase letters, numbers, and underscores"
+    Description: "SSM Parameter name"
+
+  ParamType:
+    Type: String
+    Default: String
+    AllowedValues:
+      - String
+      - StringList
+    Description: "Type of the SSM parameter; StringList values must be comma-separated"
+
+  SSMParamValue:
+    Type: String
+    Default: "ssm_param"
+    MinLength: 1
+    MaxLength: 4096
+    ConstraintDescription: "SSM parameter value must be 1-4096 characters"
+    Description: "Value stored in the SSM parameter"
+
+  SSMParamDescription:
+    Type: String
+    Default: "SSM parameter storing the bucket base name"
+    MaxLength: 1024
+    ConstraintDescription: "SSM parameter description must be at most 1024 characters"
+    Description: "Description attached to the SSM parameter"
 
   CiSuffix:
     Type: String
     Default: ""
-    Description: "Optional CI suffix to append to the bucket name"
+    AllowedPattern: "^[a-z0-9-]*$"
+    ConstraintDescription: "CI suffix must be lowercase letters, numbers, and hyphens only, or empty"
+    Description: "Optional CI suffix appended to the SSM parameter name when non-empty"
+
+  Tier:
+    Type: String
+    Default: Standard
+    AllowedValues:
+      - Standard
+      - Advanced
+      - Intelligent-Tiering
+    Description: "Optional SSM parameter tier; Standard is the default. Advanced and Intelligent-Tiering may incur charges."
+
+  Policies:
+    Type: String
+    Default: '[{"Type":"Expiration","Version":"1.0","Attributes":{"Timestamp":"2020-05-13T00:00:00.000Z"}},{"Type":"ExpirationNotification","Version":"1.0","Attributes":{"Before":"5","Unit":"Days"}},{"Type":"NoChangeNotification","Version":"1.0","Attributes":{"After":"60","Unit":"Days"}}]'
+    Description: "Optional JSON array of SSM parameter policies (for example, an Expiration policy). Only applied when Tier is Advanced and this value is non-empty."
+
+Conditions:
+  HasCiSuffix: !Not [!Equals [!Ref CiSuffix, ""]]
+  IsAdvancedTier: !Equals [!Ref Tier, Advanced]
+  HasPolicies: !Not [!Equals [!Ref Policies, ""]]
+  HasAdvancedPolicies: !And [!Condition IsAdvancedTier, !Condition HasPolicies]
 
 Resources:
-  S3BucketNestedStack:
-    Type: AWS::CloudFormation::Stack
-    DeletionPolicy: Delete
-    UpdateReplacePolicy: Delete
+  SSMParameter:
+    Type: AWS::SSM::Parameter
     Metadata:
       com.aws.cloudformation.Context:
-        why: "Invokes the nested S3 bucket CloudFormation template to create a versioned, encrypted S3 bucket with public access blocking and optional logging/website configuration"
+        why: "Stores the S3 bucket base name and related settings in SSM Parameter Store under a project/environment path so other stacks and tools can look them up"
         must:
-          - "Nested template must be accessible at the specified S3 location"
-          - "IAM principal must have s3:GetObject permission on the template S3 bucket"
-          - "CloudFormation service must have permission to assume the required IAM role for S3 and KMS operations"
+          - "Parameter name must be unique within the AWS account and region"
     Properties:
-      TemplateURL: !Sub https://${NestedStacksS3BucketName}.s3.us-east-1.amazonaws.com/cfn-nested-aws-s3-bucket/template.yaml
-      Parameters:
-        ProjectName: !Ref ProjectName
-        BucketBaseName: !Ref BucketBaseName
-        KmsKey: !Ref KmsKey
-        EnableBucketKey: !Ref EnableBucketKey
-        Environment: !Ref Environment
-        CiSuffix: !Ref CiSuffix
+      Name: !If
+        - HasCiSuffix
+        - !Sub /${ProjectName}/${Environment}/${SSMParamName}-${CiSuffix}
+        - !Sub /${ProjectName}/${Environment}/${SSMParamName}
+      Type: !Ref ParamType
+      Value: !Ref SSMParamValue
+      Description: !Ref SSMParamDescription
+      Tier: !Ref Tier
+      Policies: !If [HasAdvancedPolicies, !Ref Policies, !Ref AWS::NoValue]
       Tags:
-        - Key: ManagedBy
-          Value: RootStack
-        - Key: NestedStackPurpose
-          Value: S3BucketCreation
+        ManagedBy: CloudFormation
+        Project: !Ref ProjectName
+        Environment: !Ref Environment
 
 Outputs:
-  NestedStackId:
-    Description: "ID of the nested stack"
-    Value: !Ref S3BucketNestedStack
+  ParameterPathPrefix:
+    Description: "SSM parameter path prefix for this bucket configuration"
+    Value: !Sub /${ProjectName}/${Environment}
 
-  S3BucketName:
-    Description: "Name of the S3 bucket created by the nested stack"
-    Value: !GetAtt S3BucketNestedStack.Outputs.S3BucketName
-
-  S3BucketArn:
-    Description: "ARN of the S3 bucket created by the nested stack"
-    Value: !GetAtt S3BucketNestedStack.Outputs.S3BucketArn
+  BucketBaseNameParameterName:
+    Description: "SSM parameter name holding the bucket base name"
+    Value: !Ref SSMParameter

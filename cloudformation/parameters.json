@@ -1,7 +1,8 @@
 {
   "Environment": "devl",
-  "KmsKey": "SB-KMS",
-  "ProjectName": "cfn-nstd",
-  "BucketBaseName": "s3-nested-stack",
+  "ProjectName": "cfn-nested",
+  "SSMParamName": "bucket_name",
+  "SSMParamValue": "ssm_param",
+  "SSMParamDescription": "SSM parameter storing the bucket base name",
   "CiSuffix": ""
 }

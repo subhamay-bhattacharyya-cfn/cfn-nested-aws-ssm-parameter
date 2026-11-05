@@ -1,249 +1,117 @@
-# CloudFormation S3 Template Repository
+# CloudFormation Nested Stack Template : SSM Parameter
 
 <!-- Row 1: Status - Most Important -->
-[![Release](https://img.shields.io/github/v/release/subhamay-bhattacharyya/aws-bedrock-faq-chatbot?label=Release)](https://github.com/subhamay-bhattacharyya/aws-bedrock-faq-chatbot/releases)&nbsp;[![Release Workflow](https://github.com/subhamay-bhattacharyya/aws-bedrock-faq-chatbot/actions/workflows/release.yaml/badge.svg)](https://github.com/subhamay-bhattacharyya/aws-bedrock-faq-chatbot/actions/workflows/release.yaml)&nbsp;[![Issues](https://img.shields.io/github/issues/subhamay-bhattacharyya/aws-bedrock-faq-chatbot)](https://github.com/subhamay-bhattacharyya/aws-bedrock-faq-chatbot/issues)&nbsp;[![Last Commit](https://img.shields.io/github/last-commit/subhamay-bhattacharyya/aws-bedrock-faq-chatbot)](https://github.com/subhamay-bhattacharyya/aws-bedrock-faq-chatbot/commits)
+[![Release](https://img.shields.io/github/v/release/subhamay-bhattacharyya-cfn/cfn-nested-aws-ssm-parameter?label=Release)](https://github.com/subhamay-bhattacharyya-cfn/cfn-nested-aws-ssm-parameter/releases)&nbsp;[![Release Workflow](https://github.com/subhamay-bhattacharyya-cfn/cfn-nested-aws-ssm-parameter/actions/workflows/release.yaml/badge.svg)](https://github.com/subhamay-bhattacharyya-cfn/cfn-nested-aws-ssm-parameter/actions/workflows/release.yaml)&nbsp;[![Issues](https://img.shields.io/github/issues/subhamay-bhattacharyya-cfn/cfn-nested-aws-ssm-parameter)](https://github.com/subhamay-bhattacharyya-cfn/cfn-nested-aws-ssm-parameter/issues)&nbsp;[![Last Commit](https://img.shields.io/github/last-commit/subhamay-bhattacharyya-cfn/cfn-nested-aws-ssm-parameter)](https://github.com/subhamay-bhattacharyya-cfn/cfn-nested-aws-ssm-parameter/commits)
 
 <!-- Row 2: Code Quality -->
-[![Top Language](https://img.shields.io/badge/Languages-Python%20%7C%20YAML-blue)](https://github.com/subhamay-bhattacharyya/aws-bedrock-faq-chatbot)&nbsp;[![Commits](https://img.shields.io/github/commit-activity/t/subhamay-bhattacharyya/aws-bedrock-faq-chatbot)](https://github.com/subhamay-bhattacharyya/aws-bedrock-faq-chatbot/commits)
+[![Top Language](https://img.shields.io/badge/Languages-Python%20%7C%20YAML-blue)](https://github.com/subhamay-bhattacharyya-cfn/cfn-nested-aws-ssm-parameter)&nbsp;[![Commits](https://img.shields.io/github/commit-activity/t/subhamay-bhattacharyya-cfn/cfn-nested-aws-ssm-parameter)](https://github.com/subhamay-bhattacharyya-cfn/cfn-nested-aws-ssm-parameter/commits)
 
 <!-- Row 3: Tech Stack -->
 [![CloudFormation](https://img.shields.io/badge/CloudFormation-IaC-orange?logo=amazonaws&logoColor=white)](https://aws.amazon.com/cloudformation/)&nbsp;[![Built with Claude Code](https://img.shields.io/badge/Built_with-Claude_Code-D97757?logo=anthropic&logoColor=white)](https://claude.ai/)
 
 <!-- Row 4: Repository Info -->
-[![Files](https://img.shields.io/github/directory-file-count/subhamay-bhattacharyya/aws-bedrock-faq-chatbot)](https://github.com/subhamay-bhattacharyya/aws-bedrock-faq-chatbot)&nbsp;[![Repo Size](https://img.shields.io/github/repo-size/subhamay-bhattacharyya/aws-bedrock-faq-chatbot)](https://github.com/subhamay-bhattacharyya/aws-bedrock-faq-chatbot)&nbsp;[![Release Date](https://img.shields.io/github/release-date/subhamay-bhattacharyya/aws-bedrock-faq-chatbot)](https://github.com/subhamay-bhattacharyya/aws-bedrock-faq-chatbot/releases)
+[![Files](https://img.shields.io/github/directory-file-count/subhamay-bhattacharyya-cfn/cfn-nested-aws-ssm-parameter)](https://github.com/subhamay-bhattacharyya-cfn/cfn-nested-aws-ssm-parameter)&nbsp;[![Repo Size](https://img.shields.io/github/repo-size/subhamay-bhattacharyya-cfn/cfn-nested-aws-ssm-parameter)](https://github.com/subhamay-bhattacharyya-cfn/cfn-nested-aws-ssm-parameter)&nbsp;[![Release Date](https://img.shields.io/github/release-date/subhamay-bhattacharyya-cfn/cfn-nested-aws-ssm-parameter)](https://github.com/subhamay-bhattacharyya-cfn/cfn-nested-aws-ssm-parameter/releases)
 
 <!-- Row 5: Custom Metrics -->
-[![Custom Endpoint](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/bsubhamay/52393fb36dc28479957fbb381dda208a/raw/aws-bedrock-faq-chatbot.json)](https://gist.github.com/subhamay-bhattacharyya/52393fb36dc28479957fbb381dda208a)
+[![Custom Endpoint](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/bsubhamay/6bd1f947328c829c13d86e991d2b5f76/raw/cfn-nested-aws-ssm-parameter.json)](https://gist.github.com/subhamay-bhattacharyya/6bd1f947328c829c13d86e991d2b5f76)
 
 ---
 
-This repository contains nested CloudFormation templates for deploying S3 buckets with security best practices and optional policy enforcement.
+A CloudFormation template that creates an AWS Systems Manager (SSM) Parameter Store entry, with its name built from a project, environment and optional CI suffix.
 
 ## Overview
 
-This is a **nested stack template** designed to be invoked from a parent/root CloudFormation stack. Templates are stored in this repository and should be uploaded to an S3 bucket for reference by parent stacks.
+`cloudformation/template.yaml` is a root stack template. It creates one `AWS::SSM::Parameter` whose name follows a fixed path, and whose value, type, description, tier and policies come from its input parameters.
 
-## Template Files
+## Repository Layout
 
-### CloudFormation Templates
-
-- **`templates/s3-bucket.yaml`** — Nested template for S3 bucket creation (versioning, public access blocking)
-- **`templates/s3-bucket-policy.yaml`** — Optional nested template for S3 bucket policy (encryption enforcement, secure transport)
-
-### Parameter Files
-
-- **`parameters/parameters.json`** — Parameter values for development environment
-
-## Template Features
-
-### S3 Bucket Template (s3-bucket.yaml)
-
-- ✅ Versioning enabled by default
-- ✅ Public Access Blocking
-- ✅ Smart bucket naming (project prefix, account ID, environment, region)
-- ✅ Optional CI suffix support
-
-### S3 Bucket Policy Template (s3-bucket-policy.yaml)
-
-- ✅ Encryption enforcement on uploads
-- ✅ Secure transport enforcement (HTTPS only)
-- ✅ Optional/conditional policy rules
+```text
+cloudformation/
+├── template.yaml          # Template: SSM parameter, parameters, conditions, outputs
+├── parameters.json        # Parameter values used for deployment
+└── stack-config.json      # Stack name and template/parameter file paths for CI
+```
 
 ## Parameters
 
-### S3 Bucket Parameters
-
 | Parameter | Type | Default | Description |
-| ----------- | ------ | --------- | ------------- |
-| `ProjectName` | String | — | Project name to use as bucket prefix (required) |
-| `BucketBaseName` | String | `cfn-bucket` | Base name for S3 bucket |
-| `environment` | String | `devl` | Deployment environment (devl, stag, prod) |
-| `CiSuffix` | String | `""` | Optional CI suffix to append to bucket name |
+| --- | --- | --- | --- |
+| `ProjectName` | String | `cfn-nested` | Top-level path segment. Lowercase letters, numbers, hyphens; max 20 characters. |
+| `Environment` | String | `devl` | Second path segment. Lowercase letters, numbers, hyphens. |
+| `SSMParamName` | String | `test_name` | Parameter name segment. Lowercase letters, numbers, underscores; max 20 characters. |
+| `ParamType` | String | `String` | `String` or `StringList`. `StringList` values must be comma-separated. |
+| `SSMParamValue` | String | `ssm_param` | Value stored in the parameter. 1–4096 characters. |
+| `SSMParamDescription` | String | `SSM parameter storing the bucket base name` | Description attached to the parameter. Max 1024 characters. |
+| `CiSuffix` | String | `""` | Optional. Appended to the name when non-empty. |
+| `Tier` | String | `Standard` | `Standard`, `Advanced` or `Intelligent-Tiering`. |
+| `Policies` | String | Expiration, ExpirationNotification and NoChangeNotification JSON (see below) | JSON array of SSM policies. Applied only when `Tier` is `Advanced` and the value is non-empty. |
 
-### S3 Bucket Policy Parameters
+### Default `Policies` value
 
-**Generic (Standalone) Mode:**
+```json
+[{"Type":"Expiration","Version":"1.0","Attributes":{"Timestamp":"2020-05-13T00:00:00.000Z"}},{"Type":"ExpirationNotification","Version":"1.0","Attributes":{"Before":"5","Unit":"Days"}},{"Type":"NoChangeNotification","Version":"1.0","Attributes":{"After":"60","Unit":"Days"}}]
+```
 
-| Parameter | Type | Description |
-| ----------- | ------ | ------------- |
-| `BucketName` | String | Direct bucket name (use for any bucket) |
+> **Warning:** the `Expiration` timestamp above is in the past. SSM expects a future expiration, so deploying with `Tier=Advanced` using this default is likely to fail or create a parameter that expires immediately. Set a future timestamp before using `Advanced`.
 
-**Integrated Mode (with bucket template):**
+## Parameter Name
 
-| Parameter | Type | Default | Description |
-| ----------- | ------ | --------- | ------------- |
-| `ProjectName` | String | — | Project name (must match bucket template) |
-| `BucketBaseName` | String | `cfn-bucket` | Base name (must match bucket template) |
-| `environment` | String | `devl` | Environment (must match bucket template) |
-| `CiSuffix` | String | `""` | CI suffix (must match bucket template) |
+The parameter name is built from the parameters above:
 
-**Usage:** If `BucketName` is provided (non-empty), it takes precedence. Otherwise, the bucket name is constructed from ProjectName/BucketBaseName/environment/CiSuffix.
+```text
+/{ProjectName}/{Environment}/{SSMParamName}
+/{ProjectName}/{Environment}/{SSMParamName}-{CiSuffix}     # when CiSuffix is non-empty
+```
+
+Example: `/cfn-nested/devl/bucket_name`
 
 ## Outputs
 
-### S3 Bucket Template Outputs
+- `ParameterPathPrefix` — `/{ProjectName}/{Environment}`
+- `BucketBaseNameParameterName` — name of the created SSM parameter
 
-- `S3BucketName` — S3 bucket name
-- `S3BucketArn` — S3 bucket ARN
+## Encryption
 
-### S3 Bucket Policy Template Outputs
-
-- `BucketName` — Bucket name with policy applied
-- `PolicyStatus` — Policy application status (Applied)
+The template does not support a customer-managed KMS key. CloudFormation's `AWS::SSM::Parameter` resource creates only `String` and `StringList` parameters, and it cannot create `SecureString` parameters. SSM still encrypts parameter values at rest, but with its default handling rather than a key you specify.
 
 ## Usage
 
-### 1. Upload Templates to S3
+### Validate
 
 ```bash
-aws s3 cp templates/s3-bucket.yaml s3://your-cfn-bucket/templates/s3-bucket.yaml
-aws s3 cp templates/s3-bucket-policy.yaml s3://your-cfn-bucket/templates/s3-bucket-policy.yaml
+aws cloudformation validate-template \
+  --template-body file://cloudformation/template.yaml
 ```
 
-### 2. Reference from Parent Stack
-
-In your parent/root CloudFormation template:
-
-```yaml
-S3BucketNestedStack:
-  Type: AWS::CloudFormation::Stack
-  Properties:
-    TemplateURL: https://s3.amazonaws.com/your-cfn-bucket/templates/s3-bucket.yaml
-    Parameters:
-      ProjectName: !Ref ProjectName
-      BucketBaseName: cfn-bucket
-      environment: !Ref Environment
-      CiSuffix: !Ref CiSuffix
-    Tags:
-      - Key: Environment
-        Value: !Ref Environment
-
-S3PolicyNestedStack:
-  Type: AWS::CloudFormation::Stack
-  DependsOn: S3BucketNestedStack
-  Properties:
-    TemplateURL: https://s3.amazonaws.com/your-cfn-bucket/templates/s3-bucket-policy.yaml
-    Parameters:
-      BucketName: !GetAtt S3BucketNestedStack.Outputs.S3BucketName
-      ProjectName: ""
-      BucketBaseName: cfn-bucket
-      environment: !Ref Environment
-      CiSuffix: !Ref CiSuffix
-    Tags:
-      - Key: Environment
-        Value: !Ref Environment
-
-Outputs:
-  BucketName:
-    Value: !GetAtt S3BucketNestedStack.Outputs.S3BucketName
-  BucketArn:
-    Value: !GetAtt S3BucketNestedStack.Outputs.S3BucketArn
-```
-
-### 3. Deploy Using AWS CLI
-
-#### Option A: Deploy Bucket Only
+### Deploy
 
 ```bash
-# Development (without CI prefix)
-aws cloudformation create-stack \
-  --stack-name cfn-s3-bucket-dev \
-  --template-body file://templates/s3-bucket.yaml \
-  --parameters file://parameters/dev.json
-
-# Staging (without CI prefix)
-aws cloudformation create-stack \
-  --stack-name cfn-s3-bucket-stag \
-  --template-body file://templates/s3-bucket.yaml \
-  --parameters file://parameters/staging.json
-
-# Production (without CI prefix)
-aws cloudformation create-stack \
-  --stack-name cfn-s3-bucket-prod \
-  --template-body file://templates/s3-bucket.yaml \
-  --parameters file://parameters/prod.json
+aws cloudformation deploy \
+  --template-file cloudformation/template.yaml \
+  --stack-name cfn-nested-aws-ssm-parameter-stack \
+  --parameter-overrides file://cloudformation/parameters.json \
+  --region us-east-1
 ```
 
-#### Option B: Deploy Bucket + Policy (Recommended)
+Values in `cloudformation/parameters.json` override the defaults. Parameters left out of that file use their template defaults.
+
+### Lint
 
 ```bash
-# Deploy bucket first
-aws cloudformation create-stack \
-  --stack-name cfn-s3-bucket-dev \
-  --template-body file://templates/s3-bucket.yaml \
-  --parameters file://parameters/dev.json
-
-# Wait for bucket to be created
-aws cloudformation wait stack-create-complete --stack-name cfn-s3-bucket-dev
-
-# Get the bucket name from stack outputs
-BUCKET_NAME=$(aws cloudformation describe-stacks \
-  --stack-name cfn-s3-bucket-dev \
-  --query 'Stacks[0].Outputs[?OutputKey==`S3BucketName`].OutputValue' \
-  --output text)
-
-#### Using Integrated Mode (with bucket template parameters)
-
-```bash
-aws cloudformation create-stack \
-  --stack-name cfn-s3-policy-dev \
-  --template-body file://templates/s3-bucket-policy.yaml \
-  --parameters file://parameters/policy-dev.json
+cfn-lint cloudformation/template.yaml
 ```
 
-#### Using Generic Mode (standalone with direct bucket name)
+## CI
 
-```bash
-aws cloudformation create-stack \
-  --stack-name cfn-s3-policy-dev \
-  --template-body file://templates/s3-bucket-policy.yaml \
-  --parameters \
-    ParameterKey=BucketName,ParameterValue=my-existing-bucket \
-    ParameterKey=ProjectName,ParameterValue=""
-```
-
-#### Option C: Deploy with CI Suffix
-
-```bash
-# Development with CI suffix (e.g., for GitLab CI)
-aws cloudformation create-stack \
-  --stack-name cfn-s3-bucket-dev-ci \
-  --template-body file://templates/s3-bucket.yaml \
-  --parameters \
-    ParameterKey=ProjectName,ParameterValue=myproject \
-    ParameterKey=BucketBaseName,ParameterValue=cfn-bucket \
-    ParameterKey=environment,ParameterValue=devl \
-    ParameterKey=CiSuffix,ParameterValue=$CI_PIPELINE_ID
-```
-
-## Bucket Naming Convention
-
-The templates generate bucket names using the following pattern:
-
-**Without CI Suffix:**
-
-```bash
-{ProjectName}-{BucketBaseName}-{AccountId}-{Environment}-{Region}
-```
-
-Example: `myproject-cfn-bucket-123456789012-devl-us-east-1`
-
-**With CI Suffix:**
-
-```bash
-{ProjectName}-{BucketBaseName}-{AccountId}-{Environment}-{Region}-{CiSuffix}
-```
-
-Example: `myproject-cfn-bucket-123456789012-devl-us-east-1-pipeline-12345`
+`.github/workflows/ci.yaml` runs when files under `cloudformation/` change. It reads `cloudformation/stack-config.json` for the stack name, template path and parameter file.
 
 ## Best Practices Implemented
 
-- ✅ Versioning enabled by default
-- ✅ Public access blocked by default
-- ✅ Smart bucket naming with project prefix, account ID, environment, and region
+- ✅ Parameter names unique per project, environment and optional CI suffix
+- ✅ Input validation with allowed patterns and allowed values
 - ✅ Optional CI suffix support for unique deployments
-- ✅ Optional policy enforcement (encryption and secure transport)
-- ✅ Export values for cross-stack references
+- ✅ Advanced-tier policies applied only when requested
+- ✅ Resource metadata documenting purpose and constraints
 
 ## License
 
