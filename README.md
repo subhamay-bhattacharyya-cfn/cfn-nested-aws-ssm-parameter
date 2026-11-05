@@ -37,7 +37,7 @@ cloudformation/
 | Parameter | Type | Default | Description |
 | --- | --- | --- | --- |
 | `ProjectName` | String | `cfn-nested` | Top-level path segment. Lowercase letters, numbers, hyphens; max 20 characters. |
-| `Environment` | String | `devl` | Second path segment. Lowercase letters, numbers, hyphens. |
+| `Environment` | String | `devl` | Lowercase letters, numbers, hyphens. Not part of the parameter name; applied as the `Environment` tag on the parameter. |
 | `SSMParamName` | String | `test_name` | Parameter name segment. Lowercase letters, numbers, underscores; max 20 characters. |
 | `ParamType` | String | `String` | `String` or `StringList`. `StringList` values must be comma-separated. |
 | `SSMParamValue` | String | `ssm_param` | Value stored in the parameter. 1–4096 characters. |
@@ -59,16 +59,16 @@ cloudformation/
 The parameter name is built from the parameters above:
 
 ```text
-/{ProjectName}/{Environment}/{SSMParamName}
-/{ProjectName}/{Environment}/{SSMParamName}-{CiSuffix}     # when CiSuffix is non-empty
+/{ProjectName}/{SSMParamName}
+/{ProjectName}/{SSMParamName}-{CiSuffix}     # when CiSuffix is non-empty
 ```
 
-Example: `/cfn-nested/devl/bucket_name`
+Example: `/cfn-nested/bucket_name`
 
 ## Outputs
 
-- `ParameterPathPrefix` — `/{ProjectName}/{Environment}`
-- `BucketBaseNameParameterName` — name of the created SSM parameter
+- `ParameterName` — name of the created SSM parameter (same value as the `Name` property)
+- `ParameterValue` — value stored in the SSM parameter (`SSMParamValue`)
 
 ## Encryption
 

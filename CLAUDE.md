@@ -9,7 +9,7 @@ This is a **CloudFormation template repository** with a single root stack templa
 **Key characteristics:**
 
 - One root template (`cloudformation/template.yaml`) with no nested stacks
-- Parameter name built from `ProjectName`, `Environment`, `SSMParamName` and an optional `CiSuffix`
+- Parameter name built from `ProjectName`, `SSMParamName` and an optional `CiSuffix`; `Environment` is applied only as a tag
 - Advanced-tier policies applied only when `Tier` is `Advanced` and `Policies` is non-empty
 - Automated semantic versioning and releases
 - AWS OIDC authentication for CI/CD deployments
@@ -71,8 +71,8 @@ Select `feat`, `fix`, or `chore` type. Only `feat` and `fix` trigger releases.
 The created parameter's name is:
 
 ```text
-/{ProjectName}/{Environment}/{SSMParamName}
-/{ProjectName}/{Environment}/{SSMParamName}-{CiSuffix}     # when CiSuffix is non-empty
+/{ProjectName}/{SSMParamName}
+/{ProjectName}/{SSMParamName}-{CiSuffix}     # when CiSuffix is non-empty
 ```
 
 The `Name` property uses `Fn::If` on the `HasCiSuffix` condition to choose between the two forms.
@@ -91,13 +91,13 @@ No KMS key parameter exists. `AWS::SSM::Parameter` cannot create `SecureString` 
 
 ### `cloudformation/template.yaml`
 
-**Purpose:** Creates one `AWS::SSM::Parameter` and exposes its path and name as outputs.
+**Purpose:** Creates one `AWS::SSM::Parameter` and exposes its name and value as outputs.
 
 **Parameters:** `ProjectName`, `Environment`, `SSMParamName`, `ParamType`, `SSMParamValue`, `SSMParamDescription`, `CiSuffix`, `Tier`, `Policies`.
 
 **Conditions:** `HasCiSuffix`, `IsAdvancedTier`, `HasPolicies`, `HasAdvancedPolicies`.
 
-**Outputs:** `ParameterPathPrefix`, `BucketBaseNameParameterName`.
+**Outputs:** `ParameterName`, `ParameterValue`.
 
 **Resource metadata:** `SSMParameter` has a `com.aws.cloudformation.Context` block that records its purpose and the requirement that the name be unique within the account and region.
 

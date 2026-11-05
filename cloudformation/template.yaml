@@ -130,8 +130,8 @@ Resources:
     Properties:
       Name: !If
         - HasCiSuffix
-        - !Sub /${ProjectName}/${Environment}/${SSMParamName}-${CiSuffix}
-        - !Sub /${ProjectName}/${Environment}/${SSMParamName}
+        - !Sub /${ProjectName}/${SSMParamName}-${CiSuffix}
+        - !Sub /${ProjectName}/${SSMParamName}
       Type: !Ref ParamType
       Value: !Ref SSMParamValue
       Description: !Ref SSMParamDescription
@@ -143,10 +143,18 @@ Resources:
         Environment: !Ref Environment
 
 Outputs:
-  ParameterPathPrefix:
-    Description: "SSM parameter path prefix for this bucket configuration"
-    Value: !Sub /${ProjectName}/${Environment}
 
-  BucketBaseNameParameterName:
-    Description: "SSM parameter name holding the bucket base name"
-    Value: !Ref SSMParameter
+  ParameterArn:
+    Description: "SSM parameter ARN"
+    Value: !Sub arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${SSMParameter}
+
+  ParameterName:
+    Description: "SSM parameter name"
+    Value: !If
+        - HasCiSuffix
+        - !Sub /${ProjectName}/${SSMParamName}-${CiSuffix}
+        - !Sub /${ProjectName}/${SSMParamName}
+
+  ParameterValue:
+    Description: "SSM parameter value for the specified parameter"
+    Value: !Ref SSMParamValue
